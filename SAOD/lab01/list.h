@@ -20,6 +20,12 @@ void			print_list_node(t_list node);
 
 void			list_push_back(t_list **head, t_list *new_elem);
 
+t_list			*list_search(t_list **head, int num, int (*f)(t_list, int));
+
+int				list_count(t_list **head, int day, int num_bus, int (*f)(t_list, int, int));
+
+void			list_del_bus(t_list **head, int num_bus);
+
 void			list_print(t_list **head);
 
 void			list_clear(t_list ***head);
