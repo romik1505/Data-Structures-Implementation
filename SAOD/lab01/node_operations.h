@@ -3,7 +3,7 @@
 
 #include "list.h"
 
-void	print_list_node(t_list node);
+void	print_list_node(t_list *node);
 
 int		bus_num(t_list node, int num);
 

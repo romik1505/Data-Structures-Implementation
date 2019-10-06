@@ -1,12 +1,15 @@
 #include "list.h"
 #include "node_operations.h"
 
-void	print_list_node(t_list node)
+void	print_list_node(t_list *node)
 {
-	cout << node.bus_num << " ";
-	cout << node.departure_date << " ";
-	cout << node.departure_time << " ";
-	cout << node.price << "\n";
+	if (node)
+	{
+		cout << node->bus_num << " ";
+		cout << node->departure_date << " ";
+		cout << node->departure_time << " ";
+		cout << node->price << "\n";
+	}
 }
 
 int		bus_num(t_list node, int num)

@@ -13,14 +13,14 @@ void	list_cpy(t_list *dest, t_list *src)
 
 void	list_push_back(t_list **begin_list, t_list *new_elem)
 {
-	t_list	*list;
+	t_list	*buff;
 
 	if (begin_list && *begin_list)
 	{
-		list = *begin_list;
-		while (list->next)
-			list = list->next;
-		list->next = new_elem;
+		buff = *begin_list;
+		while (buff->next)
+			buff = buff->next;
+		buff->next = new_elem;
 	}
 	else
 	{
@@ -31,87 +31,117 @@ void	list_push_back(t_list **begin_list, t_list *new_elem)
 
 t_list	*list_search(t_list **head, int num, int (*f)(t_list, int))
 {
-	t_list *buff;
+	t_list *curr;
 
 	if (head && *head)
 	{
-		buff = *head;
-		while (buff)
+		curr = *head;
+		while (curr)
 		{
-			if (f(*buff, num))
-				return (buff);
-			buff = buff->next;
+			if (f(*curr, num))
+				return (curr);
+			curr = curr->next;
 		}
 	}
 	return (0);
 }
 
-int		list_count(t_list **head, int day, int num_bus, int (*f)(t_list, int, int))
+void	list_insert(t_list **head, t_list *new_elem, int num_bus)
 {
-	t_list 	*buff;
-	int		count = 0;
+	t_list *buff;
+	t_list *find;
 
-	if (head && *head)
+	if (head && *head && new_elem)
 	{
 		buff = *head;
 		while (buff)
 		{
-			if (f(*buff, num_bus, day))
-				++count;
+			if (buff->bus_num == num_bus)
+				find = buff;
 			buff = buff->next;
+		}
+		if (find)
+		{
+			new_elem->next = find->next;
+			find->next = new_elem;
+		}
+	}
+
+}
+
+int		list_count(t_list **head, int day, int num_bus, int (*f)(t_list, int, int))
+{
+	t_list 	*curr;
+	int		count = 0;
+
+	if (head && *head)
+	{
+		curr = *head;
+		while (curr)
+		{
+			if (f(*curr, num_bus, day))
+				++count;
+			curr = curr->next;
 		}
 	}
 	return (count);
 }
 
-void	list_del_bus(t_list **head, int num_bus)
+int		list_del_bus(t_list **head, int num_bus)
 {
-	t_list 	*buff;
+	t_list 	*curr;
 	t_list	*prev;
-
+	int		flag = 0;
 	if (head && *head)
 	{
 		prev = 0;
-		buff = *head;
-		while (buff)
+		curr = *head;
+		while (curr)
 		{
-			if (buff->bus_num == num_bus)
+			if (curr->bus_num == num_bus)
 			{
-				if (buff == *head)
+				if (curr == *head)
+				{
 					*head = (*head)->next;
+					free(curr);
+				}	
 				else
-					prev->next = buff->next;
-				free(buff);
-				buff = 0;
+				{
+					prev->next = curr->next;
+					free(curr);
+				 	curr = prev;
+				}
+				flag = 1;
 			}
-			prev = buff;
-			buff = buff->next;
+			prev = curr;
+			curr = curr->next;
 		}
 	}
+	return (flag);
 }
 
 void	list_print(t_list **head)
 {
 	if (!head || !*head)
 		return ;
-	t_list *buff = *head;
+	t_list *curr = *head;
 	int i = 0;
-	while (buff)
+	while (curr)
 	{
 		cout << "Узел [" << ++i << "]";
-		print_list_node(*buff);
-		buff = buff->next;
+		print_list_node(curr);
+		curr = curr->next;
 	}
 }
 
 void	list_clear(t_list ***head)
 {
-	t_list *buff;
+	t_list *curr;
 
-	while ((buff = **head))
+	while ((curr = **head))
 	{
 		**head = (**head)->next;
-		free(buff);
+		free(curr);
 	}
 	free(*head);
 	*head = 0;

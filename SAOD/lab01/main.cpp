@@ -15,7 +15,7 @@ int main()
 
 	list_push_back(head, buff);
 	buff = (t_list *)malloc(sizeof(t_list));
-	buff->bus_num = 5;
+	buff->bus_num = 2;
 	buff->departure_date = 6;
 	buff->departure_time = 7;
 	buff->price = 8;
@@ -23,21 +23,23 @@ int main()
 	list_push_back(head, buff);
 
 	buff = (t_list *)malloc(sizeof(t_list));
-	buff->bus_num = 5;
+	buff->bus_num = 1;
 	buff->departure_date = 6;
 	buff->departure_time = 12;
 	buff->price = 999;
 	buff->next = 0;
-	list_push_back(head, buff);
+//	list_push_back(head, buff);
 
 	list_print(head);
-	print_list_node(*list_search(head, 5, bus_num));
+	//t_list *buff2 = list_search(head, 5, bus_num);
+	//print_list_node(buff2);
 
-	cout << "--" << list_count(head, 6, 5, is_bus_day);
+//	cout << "--" << list_count(head, 6, 5, is_bus_day);
 
-	list_del_bus(head, 5);
+//	list_del_bus(head, 1);
+//	list_print(head);
+	list_insert(head, buff, 2);
 	list_print(head);
-	
 	list_clear(&head);
 	list_print(head);
 	return (0);
