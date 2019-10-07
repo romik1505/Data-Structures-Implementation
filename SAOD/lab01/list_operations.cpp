@@ -46,7 +46,7 @@ t_list	*list_search(t_list **head, int num, int (*f)(t_list, int))
 	return (0);
 }
 
-void	list_insert(t_list **head, t_list *new_elem, int num_bus)
+int		list_insert(t_list **head, t_list *new_elem, int num_bus)
 {
 	t_list *buff;
 	t_list *find;
@@ -64,9 +64,10 @@ void	list_insert(t_list **head, t_list *new_elem, int num_bus)
 		{
 			new_elem->next = find->next;
 			find->next = new_elem;
+			return (1);
 		}
 	}
-
+	return (0);
 }
 
 int		list_count(t_list **head, int day, int num_bus, int (*f)(t_list, int, int))

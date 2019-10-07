@@ -13,7 +13,7 @@ void	show_text_menu()
 
 void	filling_data(t_list *buff)
 {
-	cout << "Введите Номер автобуса: ";
+	cout << "Введите номер автобуса: ";
 	cin >> buff->bus_num;
 	cout << "\nВведите дату отправки: ";
 	cin >> buff->departure_date;
@@ -29,14 +29,15 @@ void	show_menu()
 	char ch = 0;
 	t_list **head = (t_list **)malloc(sizeof(t_list **));
 	t_list *buff = 0;
-	int num_bus = 0;
+	int		num_bus = 0;
+	int		day = 0;
 
 	do
 	{
 		system("clear");
 		show_text_menu();
 		ch = getchar();
-
+		system("sleep");
 		switch (ch)
 		{
 		case '1':
@@ -44,7 +45,7 @@ void	show_menu()
 		break;
 
 		case '2':
-			if (buff = (t_list *)malloc(sizeof(t_list)))
+			if ((buff = (t_list *)malloc(sizeof(t_list))))
 			{
 				filling_data(buff);
 				list_push_back(head, buff);
@@ -56,8 +57,24 @@ void	show_menu()
 		break;
 		
 		case '3':
-			// ДОБАВИТЬ
-			//cout << "Введите номер автобуса за которым будет вставлен следующий";
+			if ((buff = (t_list *)malloc(sizeof(t_list))))
+			{
+				filling_data(buff);
+				cout << "Введите номер автобуса за которым будет вставлен следующий";
+				cin >> num_bus;
+				if (list_insert(head, buff, num_bus))
+					cout << "Узел успешно добавлен\n";
+				else
+					{
+						
+						cout << "Автобус не найден\nУзел удален\n";
+						free(buff);
+					}
+				buff = 0;
+			}
+			else
+				cout << "Ошибка создания узла\n";
+			
 		break;
 		
 		case '4':
@@ -74,13 +91,19 @@ void	show_menu()
 		break;
 		
 		case '6':
+			cout << "Введите номер автобуса\n";
+			cin >> num_bus;
+			cout << "Введите день\n";
+			cin >> day;
+			cout << list_count(head, day, num_bus, is_bus_day);
 		break;
 
 		case '0':
 		break;
+		system("sleep");
 		}
 	} while (ch != '0');
 	
-	
+	list_clear(&head);
 
 }
