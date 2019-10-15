@@ -65,8 +65,6 @@ int		get_date(int date, int *hour, int *min, int *sec, int *mday, int *month, in
 	return (1);
 }
 
-
-
 void	print_list_node(t_list *node)
 {
 	if (node)
