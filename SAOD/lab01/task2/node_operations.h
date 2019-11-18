@@ -1,10 +1,7 @@
 #ifndef NODE_OPERATIONS_H
 #define NODE_OPERATIONS_H
 
-#include <iostream>
 #include "list.h"
-
-using namespace std;
 
 #define SEC_IN_MIN		60
 #define SEC_IN_HOUR		3600

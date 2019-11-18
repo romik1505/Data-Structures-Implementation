@@ -1,6 +1,5 @@
 #include "list.h"
 #include "node_operations.h"
-#include "string.h"
 
 void	print_date(int date)
 {
@@ -64,6 +63,8 @@ int		get_date(int date, int *hour, int *min, int *sec, int *mday, int *month, in
 
 	return (1);
 }
+
+
 
 void	print_list_node(t_list *node)
 {
