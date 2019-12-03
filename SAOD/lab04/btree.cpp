@@ -1,8 +1,10 @@
 #include "btree.h"
 #include "stdlib.h"
 #include <iostream>
-
+#include <iterator>
+#include <list>
 using namespace std;
+
 // Конструктор по умолчанию
 btree::btree()				
 {
@@ -23,7 +25,7 @@ btree::~btree()
 
 void btree::copy_helper(t_node *&dest, t_node *src)
 {
-	if(src == NULL)
+	if (src == NULL)
 		dest = NULL;
 	else
 	{
@@ -59,11 +61,10 @@ void btree::add_helper(t_node *&root, int data)
 		root->left = 0;
 		root->right = 0;
 	}
-	else if (data < root->data)
-		add_helper(root->left, data);
-	else if (data > root->data)
-		add_helper(root->right, data);
-
+	else 
+		if (data < root->data)	add_helper(root->left, data);
+	else 
+		if (data > root->data)	add_helper(root->right, data);
 }
 
 // Добавление узла в дерево
@@ -86,58 +87,66 @@ int btree::min()
 	return (min_helper(root));
 }
 
-// Модуль всех узлов в дереве
-void btree::absolut()
-{
-	absolut_helper(root);
-}
-
-void btree::absolut_helper(t_node *p)
-{
-	if(p)
-	{
-		p->data = abs(p->data);
-		absolut_helper(p->left);
-		absolut_helper(p->right);
-	}
-}
-
-void btree::print_vhelper(t_node *p,int level)
+void btree::print_h_helper(t_node *p,int level)
 {
 	if(p)
     {
-		print_vhelper(p->right,level + 1);
+		print_h_helper(p->right,level + 1);
         for(int i = 0; i< level; i++) cout<<"   ";
         cout << p->data << endl;
-		print_vhelper(p->left,level + 1);
-
-    }
-	else 
-	{
-		for(int i = 0; i< level; i++) cout<<"   ";
-		cout << "x\n";
-	}
-}
-
-void btree::print_vertical()
-{
-	print_vhelper(root, 0);
-}
-
-void get_height_helper(t_node * p,int level)
-{
-	if(p)
-    {
-		get_height_helper(p->left,level + 1);
-		
-		get_height_helper(p->right,level + 1);
+		print_h_helper(p->left,level + 1);
 
     }
 }
 
 void btree::print_horizontal()
 {
-
+	print_h_helper(root, 0);
 }
 
-//void balance();			// Балансировка
+void btree::wide(int (*f)(t_node *))
+{
+	list <t_node*> q;
+	list <t_node*>::iterator pos_begin;
+	t_node *node;
+	q.push_back(root);
+	while (q.size() != 0)
+	{
+		pos_begin = q.begin();
+		node = *pos_begin;
+		(*f)(node);
+		q.pop_front();
+		if (node->left) q.push_back(node->left);
+		if (node->right) q.push_back(node->right);
+	}
+}
+
+int print_tnode(t_node *el)
+{
+	cout << el->data << " ";
+}
+
+void btree::wide_print()
+{
+	wide(print_tnode);
+}
+
+void btree::absolut()
+{
+	t_node *new_tree = 0;
+	abs_helper(root, new_tree);
+	clear();
+	root = new_tree;
+}
+
+void btree::abs_helper(t_node *root, t_node *&new_tree)
+{
+	if (root)
+	{
+		add_helper(new_tree, abs(root->data));
+		if (root->left) abs_helper(root->left, new_tree);
+		if (root->right) abs_helper(root->right, new_tree);
+	}
+}
+
+void balance();			// Балансировка

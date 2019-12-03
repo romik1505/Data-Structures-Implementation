@@ -14,11 +14,19 @@ int main()
 	A.add(0);
 	A.add(3);
 
-	A.print_vertical();
-
+	A.print_horizontal();
 	std::cout << "\n\n\n";
+	A.wide_print();
+	A.absolut();
+	std::cout << "\n\n\n";
+	A.print_horizontal();
+//	std::cout <<"\n\n\n" << A.min() << "\n\n\n";
+//	std::cout <<"\n\n\n" << A.absolut() << "\n\n\n";
+//	A.absolut();
+//	A.print_vertical();
+//	std::cout <<"Height = "<< A.get_height() << "\n";
+	A.wide_print();
 
-	//std::cout << A.min();
 
 	return (0);
 }
