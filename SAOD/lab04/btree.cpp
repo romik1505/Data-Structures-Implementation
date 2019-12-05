@@ -14,7 +14,23 @@ btree::btree()
 // Конструктор копирования
 btree::btree(const btree &src)		
 {
-	copy_helper(root, src.root);
+	copy(src);
+}
+
+void btree::absolut(const btree &src)
+{
+	clear();
+	absolut(src.root);
+}
+
+void btree::absolut(t_node *p)
+{
+	if (p)
+	{
+		absolut(p->left);
+		insert(abs(p->data));
+		absolut(p->right);
+	}
 }
 
 // Деструктор
@@ -23,7 +39,13 @@ btree::~btree()
 	clear();
 }
 
-void btree::copy_helper(t_node *&dest, t_node *src)
+void btree::copy(const btree &src)
+{
+	clear();
+	copy(this->root, src.root);
+}
+
+void btree::copy(t_node *&dest, t_node *src)
 {
 	if (src == NULL)
 		dest = NULL;
@@ -31,17 +53,18 @@ void btree::copy_helper(t_node *&dest, t_node *src)
 	{
 		dest = (t_node *)malloc(sizeof(t_node));
 		dest->data = src->data;
-		copy_helper(dest->left, src->left);
-		copy_helper(dest->right, src->right);
+		dest->height = src->height;
+		copy(dest->left, src->left);
+		copy(dest->right, src->right);
 	}
 }
 
-void btree::del_helper(t_node *&del_elem)
+void btree::del(t_node *&del_elem)
 {
 	if (del_elem)
 	{
-		del_helper(del_elem->left);
-		del_helper(del_elem->right);
+		del(del_elem->left);
+		del(del_elem->right);
 		free(del_elem);
 		del_elem = 0;
 	}
@@ -49,34 +72,50 @@ void btree::del_helper(t_node *&del_elem)
 
 void btree::clear()
 {
-	del_helper(root);
+	del(root);
 }
 
-void btree::add_helper(t_node *&root, int data)
+void btree::insert(int data)
 {
-	if (!root)
+	root = insert(data, root);
+}
+
+t_node *btree::insert(int x, t_node *t)
+{
+	if (t == NULL)
 	{
-		root = (t_node *)malloc(sizeof(t_node));
-		root->data = data;
-		root->left = 0;
-		root->right = 0;
+		t = (t_node *)malloc(sizeof(t_node));
+		t->data = x;
+		t->left = 0;
+		t->right = 0;
 	}
-	else 
-		if (data < root->data)	add_helper(root->left, data);
-	else 
-		if (data > root->data)	add_helper(root->right, data);
+	else if (x < t->data)
+	{
+		t->left = insert(x, t->left);
+		if (height(t->left) - height(t->right) == 2)
+			if (x < t->left->data)
+				t = rotateWithLeftChild(t);
+		else
+			t = doubleWithLeftChild(t);
+	}
+	else if (x > t->data)
+	{
+		t->right = insert(x, t->right);
+		if (height(t->right) - height(t->left) == 2)
+			if (x > t->right->data)
+				t = rotateWithRightChild(t);
+		else
+			t = doubleWithRightChild(t);
+			
+	}
+	t->height = max(height(t->left), height(t->right)) + 1;
+	return t;
 }
 
-// Добавление узла в дерево
-void btree::add(int data)
-{
-	add_helper(root, data);
-}
-
-int btree::min_helper(t_node *root)
+int btree::min(t_node *root)
 {
 	if (root->left)
-		return(min_helper(root->left));
+		return(min(root->left));
 	else
 		return (root->data);
 }
@@ -84,27 +123,26 @@ int btree::min_helper(t_node *root)
 // Вывод минимального значения
 int btree::min()
 {
-	return (min_helper(root));
+	return (min(root));
 }
 
-void btree::print_h_helper(t_node *p,int level)
+void btree::print_horizontal(t_node *p,int level)
 {
 	if(p)
     {
-		print_h_helper(p->right,level + 1);
+		print_horizontal(p->right,level + 1);
         for(int i = 0; i< level; i++) cout<<"   ";
         cout << p->data << endl;
-		print_h_helper(p->left,level + 1);
-
+		print_horizontal(p->left,level + 1);
     }
 }
 
 void btree::print_horizontal()
 {
-	print_h_helper(root, 0);
+	print_horizontal(root, 0);
 }
 
-void btree::wide(int (*f)(t_node *))
+void btree::levelorder(int (*f)(t_node *))
 {
 	list <t_node*> q;
 	list <t_node*>::iterator pos_begin;
@@ -123,30 +161,49 @@ void btree::wide(int (*f)(t_node *))
 
 int print_tnode(t_node *el)
 {
+	if (!el) return (0);
 	cout << el->data << " ";
+	return (1);
 }
 
-void btree::wide_print()
+void btree::levelorder_print()
 {
-	wide(print_tnode);
+	levelorder(print_tnode);
 }
 
-void btree::absolut()
+int btree::height(t_node *t)
 {
-	t_node *new_tree = 0;
-	abs_helper(root, new_tree);
-	clear();
-	root = new_tree;
+	return t == NULL ? -1 : t->height;
 }
 
-void btree::abs_helper(t_node *root, t_node *&new_tree)
+t_node* btree::rotateWithLeftChild(t_node* k2)
 {
-	if (root)
-	{
-		add_helper(new_tree, abs(root->data));
-		if (root->left) abs_helper(root->left, new_tree);
-		if (root->right) abs_helper(root->right, new_tree);
-	}
+	t_node *k1 = k2->left;
+	k2->left = k1->right;
+	k1->right = k2;
+	k2->height = max(height(k2->left), height(k2->right)) + 1;
+	k1->height = max(height(k1->left), k2->height) + 1;
+	return k1;
 }
 
-void balance();			// Балансировка
+t_node *btree::rotateWithRightChild(t_node *k1)
+{
+	t_node *k2 = k1->right;
+	k1->right = k2->left;
+	k2->left = k1;
+	k1->height = max(height(k1->left), height(k1->right)) + 1;
+	k2->height = max(height(k2->right), k1->height) + 1;
+	return k2;
+}
+
+t_node *btree::doubleWithLeftChild(t_node *k3)
+{
+	k3->left = rotateWithRightChild(k3->left);
+	return rotateWithLeftChild(k3);
+}
+
+t_node *btree::doubleWithRightChild(t_node *k1)
+{
+	k1->right = rotateWithLeftChild(k1->right);
+	return rotateWithRightChild(k1);
+}
