@@ -1,35 +1,42 @@
 #include "stack.h"
+#include <iostream>	
+#include "stdio.h"
+#include "evalexp.h"
 
 using namespace std;
 
+#define BUFF_SIZE 128
+
+
+
 int main(void)
 {
-	stack<int> A;
+	stack<char *> A;
 
-	// gov test1;
-	// test1.data = 1;
-	// gov test2;
-	// test2.data = 2;
-	// gov test3;
-	// test3.data = 3;
-	// gov test4;
-	// test4.data = 4;
-	// gov test5;
-	// test5.data = 5;
-	int test1 = 1, test2 = 2, test3 = 3, test4 = 4, test5 = 5;
-
-	A.push(test1);
-	A.push(test2);
-	A.push(test3);
-	A.push(test4);
-	A.push(test5);
-
-	A.pop();
-	A.pop();
-	A.pop();
-	A.pop();
-	A.pop();
-	A.pop();
+	char *eval = (char *)malloc(sizeof(char) * BUFF_SIZE);
 	
+	/*
+	printf("Введите выражение: ");
+	scanf("%s", eval);
+	printf("\n%s\n", eval);
+	free(eval);
+	*/
+
+
+
 	return (0);
+}
+
+int get_operation_priority(char ch)
+{
+	if (ch == '+' || ch == '-') return (1);
+	if (ch == '*' || ch == '/')	return (2);
+	if (ch == '(')	return (3);
+}
+
+int solve(char *eval)
+{
+	stack <char *> st_numbers;
+	stack <> st_op;
+
 }
