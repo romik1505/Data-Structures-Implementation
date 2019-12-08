@@ -1,11 +1,7 @@
-#include <iostream>
-#include "btree.h"
+#include "iostream"
 #include "menu.h"
-
 int main()
 {
-	menu A;
-
-	A.show_menu();
-	return (0);
+    menu A;
+    A.show_menu();
 }

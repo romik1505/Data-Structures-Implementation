@@ -1,6 +1,6 @@
 #include "menu.h"
 #include <iostream>
-#include "BalancedBinaryTree.h"
+#include "btree.h"
 using namespace std;
 
 // Конструктор по умолчанию
@@ -27,8 +27,8 @@ void	menu::show_text_menu()
 void	menu::show_menu()
 {
 	char 	ch = 0;
-	BalancedBinaryTree 	A;
-    BalancedBinaryTree 	B;
+	btree 	A;
+    btree 	B;
 	int buff = 0;
 	do
 	{
