@@ -52,6 +52,7 @@ void vector<Data>::push_back(Data elem)
 template <class Data>
 void vector<Data>::resize(int new_size)
 {
+	if (new_size < 0) return;
 	Data *buff = (Data *)malloc(sizeof(Data) * new_size);
 	int i = capacity - 1;
 
